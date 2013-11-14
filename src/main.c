@@ -5,14 +5,6 @@
 typedef int (*tpFunc)();
 // gcc -m32 -Wall -Wa,--execstack -o ~/Desktop/main main.c funcao_assembly_builder.c lista.c
 
-void dump (void *p, int n) {
-  unsigned char *p1 = p;
-  while (n--) {
-    printf("%p - %x\n", p1, *p1);
-    p1++;
-  }
-}
-
 int main()
 {
    unsigned char* funcCode;
