@@ -24,6 +24,7 @@
 
 #define MOVL_TO_EAX 0xb8
 #define MOVL_TO_ECX 0xb9
+#define MOVL_TO_EDX 0xba
 
 #define MOVL_ENTRE_LOCAIS 0x89
 #define MOVL_ECX_PARA_pEBP 0x4d
@@ -31,10 +32,20 @@
 
 #define MOVL_ENTRE_LOCAIS_2 0x8b
 #define MOVL_pEBP_PARA_EAX 0x45
+#define MOVL_pEBP_PARA_ECX 0x4d
+#define MOVL_pEBP_PARA_EDX 0x55
 
 #define OPER_L 0x81
 #define SUB_ESP 0xec
 #define ADD_ECX 0xc1
+
+#define OPER_ENTRE_REGISTRADORES 0xd1
+#define OPER_ADD_EDX_ECX 0x01
+#define OPER_SUB_EDX_ECX 0x29
+
+#define MUL_ENTRE_REGISTRADORES_Byte1 0x0f
+#define MUL_ENTRE_REGISTRADORES_Byte2 0xaf
+#define MUL_EDX_ECX 0xca
 
 typedef struct FABUI_stFuncao
 {
@@ -53,7 +64,7 @@ static unsigned char pInstrucoes[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00,
 
-	// Corpo (100 bytes)
+	// Corpo (200 bytes)
 	0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00,
@@ -110,6 +121,7 @@ FABUI_tppFuncao FABUI_CriarBuilder()
 void FABUI_DestruirBuilder(FABUI_tppFuncao pFuncaoParm)
 {
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
+	free(pFuncao->pInstrucoes);
 	free(pFuncao);
 }
 
@@ -130,11 +142,12 @@ void FABUI_SubDoESP(FABUI_tppFuncao pFuncaoParm, int qnt)
 	AddByteNoCorpo(pFuncaoParm, SUB_ESP);
 	AddIntNoCorpo(pFuncaoParm, qnt);
 }
-
-void FABUI_MovToECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
+void FABUI_MovDaStackParaEAX(FABUI_tppFuncao pFuncaoParm, char stackPosition)
 {
-	AddByteNoCorpo(pFuncaoParm, MOVL_TO_ECX);
-	AddIntNoCorpo(pFuncaoParm, inteiro);
+	unsigned char *pos = (unsigned char*) &stackPosition;
+	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS_2);
+	AddByteNoCorpo(pFuncaoParm, MOVL_pEBP_PARA_EAX);
+	AddByteNoCorpo(pFuncaoParm, *pos);
 }
 
 void FABUI_AddToECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
@@ -142,6 +155,7 @@ void FABUI_AddToECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
 	AddByteNoCorpo(pFuncaoParm, OPER_L);
 	AddByteNoCorpo(pFuncaoParm, ADD_ECX);
 	AddIntNoCorpo(pFuncaoParm, inteiro);
+
 }
 
 void FABUI_MovECXToStack(FABUI_tppFuncao pFuncaoParm, char stackPosition)
@@ -152,12 +166,52 @@ void FABUI_MovECXToStack(FABUI_tppFuncao pFuncaoParm, char stackPosition)
 	AddByteNoCorpo(pFuncaoParm, *pos);
 }
 
-void FABUI_MovDaStackParaEAX(FABUI_tppFuncao pFuncaoParm, char stackPosition)
+void FABUI_MovToECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
 {
-	unsigned char *pos = (unsigned char*) &stackPosition;
+	AddByteNoCorpo(pFuncaoParm, MOVL_TO_ECX);
+	AddIntNoCorpo(pFuncaoParm, inteiro);
+}
+
+void FABUI_MovToEDX(FABUI_tppFuncao pFuncaoParm, int inteiro)
+{
+	AddByteNoCorpo(pFuncaoParm, MOVL_TO_EDX);
+	AddIntNoCorpo(pFuncaoParm, inteiro);
+}
+
+void FABUI_MovDaStackParaECX(FABUI_tppFuncao pFuncaoParm, char posicaoStack)
+{
+	unsigned char *pos = (unsigned char*) &posicaoStack;
 	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS_2);
-	AddByteNoCorpo(pFuncaoParm, MOVL_pEBP_PARA_EAX);
+	AddByteNoCorpo(pFuncaoParm, MOVL_pEBP_PARA_ECX);
 	AddByteNoCorpo(pFuncaoParm, *pos);
+}
+
+void FABUI_MovDaStackParaEDX(FABUI_tppFuncao pFuncaoParm, char posicaoStack)
+{
+	unsigned char *pos = (unsigned char*) &posicaoStack;
+	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS_2);
+	AddByteNoCorpo(pFuncaoParm, MOVL_pEBP_PARA_EDX);
+	AddByteNoCorpo(pFuncaoParm, *pos);
+}
+
+
+void FABUI_AddEDX_ECX(FABUI_tppFuncao pFuncaoParm)
+{
+  AddByteNoCorpo(pFuncaoParm, OPER_ADD_EDX_ECX);
+  AddByteNoCorpo(pFuncaoParm, OPER_ENTRE_REGISTRADORES);
+}
+
+void FABUI_SubEDX_ECX(FABUI_tppFuncao pFuncaoParm)
+{
+  AddByteNoCorpo(pFuncaoParm, OPER_SUB_EDX_ECX);
+  AddByteNoCorpo(pFuncaoParm, OPER_ENTRE_REGISTRADORES);
+}
+
+void FABUI_MulEDX_ECX(FABUI_tppFuncao pFuncaoParm)
+{
+	AddByteNoCorpo(pFuncaoParm, MUL_ENTRE_REGISTRADORES_Byte1);
+	AddByteNoCorpo(pFuncaoParm, MUL_ENTRE_REGISTRADORES_Byte2);
+	AddByteNoCorpo(pFuncaoParm, MUL_EDX_ECX);
 }
 
 unsigned char* FABUI_Instrucoes(FABUI_tppFuncao pFuncaoParm)

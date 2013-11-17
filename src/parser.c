@@ -74,16 +74,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
           if (fscanf(myfp, "%d %c %c%d", &i1, &op, &v2, &i2) != 4)
             error("att arit comando invalido", line);
 
-					if (v1 == '$')
-					{
-						if (v2 == '$')
-						{
-							if (op == '+')
-							{
-								FBUI_AtribuirSoma(pFuncao, i0, i1, i2);
-							}
-						}
-					}
+					FBUI_AtribuirSoma(pFuncao, c, i0, v1, i1, op, v2, i2);
           //printf("%c%d = %c%d %c %c%d\n", v0, i0, v1, i1, op, v2, i2);
         }
         break;
