@@ -27,7 +27,7 @@ void FBUI_DestruirBuilder(FBUI_tppFuncao pFuncaoParm)
 	free(pFuncao);
 }
 
-void FBUI_Retornar(FBUI_tppFuncao pFuncaoParm, int condicao, int retorno)
+void FBUI_RetornarComConstantes(FBUI_tppFuncao pFuncaoParm, int condicao, int retorno)
 {
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
   

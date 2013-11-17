@@ -85,7 +85,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
         if (fscanf(myfp, "et? %c%d %c%d", &v0, &i0, &v1, &i1) != 4)
            error("comando invalido", line);
 
-				FBUI_Retornar(pFuncao, i0, i1);
+				FBUI_RetornarComConstantes(pFuncao, i0, i1);
 
         break;
       }
