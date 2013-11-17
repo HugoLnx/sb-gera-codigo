@@ -29,6 +29,9 @@
 #define MOVL_ECX_PARA_pEBP 0x4d
 #define JMP_REL 0xeb
 
+#define MOVL_ENTRE_LOCAIS_2 0x8b
+#define MOVL_pEBP_PARA_EAX 0x45
+
 #define OPER_L 0x81
 #define SUB_ESP 0xec
 #define ADD_ECX 0xc1
@@ -146,6 +149,14 @@ void FABUI_MovECXToStack(FABUI_tppFuncao pFuncaoParm, char stackPosition)
 	unsigned char *pos = (unsigned char*) &stackPosition;
 	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS);
 	AddByteNoCorpo(pFuncaoParm, MOVL_ECX_PARA_pEBP);
+	AddByteNoCorpo(pFuncaoParm, *pos);
+}
+
+void FABUI_MovDaStackParaEAX(FABUI_tppFuncao pFuncaoParm, char stackPosition)
+{
+	unsigned char *pos = (unsigned char*) &stackPosition;
+	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS_2);
+	AddByteNoCorpo(pFuncaoParm, MOVL_pEBP_PARA_EAX);
 	AddByteNoCorpo(pFuncaoParm, *pos);
 }
 

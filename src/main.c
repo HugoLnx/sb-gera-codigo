@@ -28,7 +28,8 @@ int main()
    tpFunc funcao;
    FBUI_tppFuncao pFunc = FBUI_CriarBuilder();
 
-	 FBUI_Retornar(pFunc, 1, 99);
+	 FBUI_AtribuirSoma(pFunc, 0, 29, 1);
+	 FBUI_RetornarComConstanteEVariavel(pFunc, 0, 0);
 
    funcCode = FBUI_Instrucoes(pFunc);
 	 //dump(funcCode, 147);

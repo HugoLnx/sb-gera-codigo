@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../src/parser.h"
 
 typedef int (*funcp)();
@@ -16,12 +17,16 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
 	{
 		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
 	}
+
+	free(codes[0]);
+	free(codes);
 }
 
 int main()
 {
-	deveRetornar("ret_constantes_condicional_true.sb", 50);
+	//deveRetornar("ret_constantes_condicional_true.sb", 50);
 	//deveRetornar("ret_constantes_condicional_false.sb", 99);
-	deveRetornar("atribuicao_variavel_constante.sb", 80);
+	//deveRetornar("atribuicao_variavel_constante.sb", 80);
+	deveRetornar("ret_variavel.sb", 30);
   return 0;
 }

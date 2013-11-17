@@ -73,7 +73,18 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
           char v1 = c0, v2, op;
           if (fscanf(myfp, "%d %c %c%d", &i1, &op, &v2, &i2) != 4)
             error("att arit comando invalido", line);
-          printf("%c%d = %c%d %c %c%d\n", v0, i0, v1, i1, op, v2, i2);
+
+					if (v1 == '$')
+					{
+						if (v2 == '$')
+						{
+							if (op == '+')
+							{
+								FBUI_AtribuirSoma(pFuncao, i0, i1, i2);
+							}
+						}
+					}
+          //printf("%c%d = %c%d %c %c%d\n", v0, i0, v1, i1, op, v2, i2);
         }
         break;
       }
@@ -85,7 +96,15 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
         if (fscanf(myfp, "et? %c%d %c%d", &v0, &i0, &v1, &i1) != 4)
            error("comando invalido", line);
 
-				FBUI_RetornarComConstantes(pFuncao, i0, i1);
+				if (v0 == '$')
+				{
+					if (v1 == '$')
+					{
+						FBUI_RetornarComConstantes(pFuncao, i0, i1);
+					} else if (v1 == 'v') {
+						FBUI_RetornarComConstanteEVariavel(pFuncao, i0, i1);
+					}
+				}
 
         break;
       }

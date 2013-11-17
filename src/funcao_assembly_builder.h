@@ -12,3 +12,4 @@ void FABUI_SubDoESP(FABUI_tppFuncao pFuncaoParm, int qnt);
 void FABUI_MovToECX(FABUI_tppFuncao pFuncaoParm, int inteiro);
 void FABUI_AddToECX(FABUI_tppFuncao pFuncaoParm, int inteiro);
 void FABUI_MovECXToStack(FABUI_tppFuncao pFuncaoParm, char stackPosition);
+void FABUI_MovDaStackParaEAX(FABUI_tppFuncao pFuncaoParm, char stackPosition);

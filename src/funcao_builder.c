@@ -38,6 +38,17 @@ void FBUI_RetornarComConstantes(FBUI_tppFuncao pFuncaoParm, int condicao, int re
 	}
 }
 
+void FBUI_RetornarComConstanteEVariavel(FBUI_tppFuncao pFuncaoParm, int condicao, int numDaVariavelRetornada)
+{
+
+	if (condicao == 0)
+	{
+		char stackPosition = (numDaVariavelRetornada + 1) * -4;
+		FABUI_MovDaStackParaEAX(pFuncaoParm->pAssembly, stackPosition);
+		FABUI_JmpParaRodape(pFuncaoParm->pAssembly);
+	}
+}
+
 void FBUI_AtribuirSoma(FBUI_tppFuncao pFuncaoParm, int nVariavel, int a, int b)
 {
 	char stackPosition = (nVariavel + 1) * -4;
