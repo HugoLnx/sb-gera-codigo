@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "funcao_assembly_builder.h"
+#include "funcao_builder.h"
 
 typedef int (*tpFunc)();
 // gcc -m32 -Wall -Wa,--execstack -o ~/Desktop/main main.c funcao_assembly_builder.c lista.c
@@ -25,11 +26,11 @@ int main()
 {
    unsigned char* funcCode;
    tpFunc funcao;
-   FABUI_tppFuncao pFunc = FABUI_CriarBuilder();
+   FBUI_tppFuncao pFunc = FBUI_CriarBuilder();
 
-	 FABUI_MovToEAX(pFunc, 99);
+	 FBUI_Retornar(pFunc, 1, 99);
 
-   funcCode = FABUI_Instrucoes(pFunc);
+   funcCode = FBUI_Instrucoes(pFunc);
 	 //dump(funcCode, 147);
 
    funcao = (tpFunc) funcCode;

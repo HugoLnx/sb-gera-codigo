@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
-#include "lista.h"
 #include "funcao_assembly_builder.h"
 #include "funcao_builder.h"
 
@@ -30,9 +29,10 @@ void FBUI_Retornar(FBUI_tppFuncao pFuncaoParm, int condicao, int retorno)
 {
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
   
-	if (condicao)
+	if (condicao == 0)
 	{
-
+		FABUI_MovToEAX(pFuncao->pAssembly, retorno);
+		FABUI_JmpParaRodape(pFuncao->pAssembly);
 	}
 }
 
