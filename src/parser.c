@@ -55,15 +55,14 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
         char v0 = c, c0;
 
         if (fscanf(myfp, "%d = %c", &i0, &c0) != 2)
-          error("comando invalido", line);
-
+          error("att comando invalido", line);
 
 			  /***** call ******/
         if (c0 == 'c') {
           int f, i1;
           char v1;
           if (fscanf(myfp, "all %d %c%d", &f, &v1, &i1) != 3) 
-            error("comando invalido", line);
+            error("att call comando invalido", line);
           printf("%c%d = call %d %c%d\n", v0, i0, f, v1, i1);
         }
 
@@ -73,7 +72,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
           int i1, i2;
           char v1 = c0, v2, op;
           if (fscanf(myfp, "%d %c %c%d", &i1, &op, &v2, &i2) != 4)
-            error("comando invalido", line);
+            error("att arit comando invalido", line);
           printf("%c%d = %c%d %c %c%d\n", v0, i0, v1, i1, op, v2, i2);
         }
         break;
@@ -95,6 +94,8 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
     line ++;
     fscanf(myfp, " ");
   }
+
+	fclose(myfp);
 
   return ppFuncoes;
 }

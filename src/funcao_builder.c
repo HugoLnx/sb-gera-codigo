@@ -15,6 +15,8 @@ FBUI_tppFuncao FBUI_CriarBuilder()
 
 	 pFuncao->pAssembly = FABUI_CriarBuilder();
 
+	 FABUI_SubDoESP(pFuncao->pAssembly, 40);
+
    return pFuncao;
 }
 
@@ -34,6 +36,14 @@ void FBUI_Retornar(FBUI_tppFuncao pFuncaoParm, int condicao, int retorno)
 		FABUI_MovToEAX(pFuncao->pAssembly, retorno);
 		FABUI_JmpParaRodape(pFuncao->pAssembly);
 	}
+}
+
+void FBUI_AtribuirSoma(FBUI_tppFuncao pFuncaoParm, int nVariavel, int a, int b)
+{
+	char stackPosition = (nVariavel + 1) * -4;
+	FABUI_MovToECX(pFuncaoParm->pAssembly, a);
+	FABUI_AddToECX(pFuncaoParm->pAssembly, b);
+	FABUI_MovECXToStack(pFuncaoParm->pAssembly, stackPosition);
 }
 
 unsigned char* FBUI_Instrucoes(FBUI_tppFuncao pFuncaoParm)

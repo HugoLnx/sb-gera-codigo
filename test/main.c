@@ -20,6 +20,8 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
 
 int main()
 {
-	deveRetornar("program1.sb", 50);
+	deveRetornar("ret_constantes_condicional_true.sb", 50);
+	//deveRetornar("ret_constantes_condicional_false.sb", 99);
+	deveRetornar("atribuicao_variavel_constante.sb", 80);
   return 0;
 }

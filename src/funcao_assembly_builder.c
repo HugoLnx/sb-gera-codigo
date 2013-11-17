@@ -23,7 +23,15 @@
 // byte após o jmp.
 
 #define MOVL_TO_EAX 0xb8
+#define MOVL_TO_ECX 0xb9
+
+#define MOVL_ENTRE_LOCAIS 0x89
+#define MOVL_ECX_PARA_pEBP 0x4d
 #define JMP_REL 0xeb
+
+#define OPER_L 0x81
+#define SUB_ESP 0xec
+#define ADD_ECX 0xc1
 
 typedef struct FABUI_stFuncao
 {
@@ -108,6 +116,39 @@ void FABUI_MovToEAX(FABUI_tppFuncao pFuncaoParm, int inteiro)
 	AddIntNoCorpo(pFuncaoParm, inteiro);
 }
 
+void FABUI_JmpParaRodape(FABUI_tppFuncao pFuncaoParm)
+{
+  AddCorpoJumpParaORodape(pFuncaoParm);
+}
+
+void FABUI_SubDoESP(FABUI_tppFuncao pFuncaoParm, int qnt)
+{
+	AddByteNoCorpo(pFuncaoParm, OPER_L);
+	AddByteNoCorpo(pFuncaoParm, SUB_ESP);
+	AddIntNoCorpo(pFuncaoParm, qnt);
+}
+
+void FABUI_MovToECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
+{
+	AddByteNoCorpo(pFuncaoParm, MOVL_TO_ECX);
+	AddIntNoCorpo(pFuncaoParm, inteiro);
+}
+
+void FABUI_AddToECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
+{
+	AddByteNoCorpo(pFuncaoParm, OPER_L);
+	AddByteNoCorpo(pFuncaoParm, ADD_ECX);
+	AddIntNoCorpo(pFuncaoParm, inteiro);
+}
+
+void FABUI_MovECXToStack(FABUI_tppFuncao pFuncaoParm, char stackPosition)
+{
+	unsigned char *pos = (unsigned char*) &stackPosition;
+	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS);
+	AddByteNoCorpo(pFuncaoParm, MOVL_ECX_PARA_pEBP);
+	AddByteNoCorpo(pFuncaoParm, *pos);
+}
+
 unsigned char* FABUI_Instrucoes(FABUI_tppFuncao pFuncaoParm)
 {
    tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
@@ -117,11 +158,6 @@ unsigned char* FABUI_Instrucoes(FABUI_tppFuncao pFuncaoParm)
 	 AddRodapeJumpParaOPosCodigo(pFuncaoParm);
 
 	 return pFuncao->pInstrucoes;
-}
-
-void FABUI_JmpParaRodape(FABUI_tppFuncao pFuncaoParm)
-{
-  AddCorpoJumpParaORodape(pFuncaoParm);
 }
 
 
