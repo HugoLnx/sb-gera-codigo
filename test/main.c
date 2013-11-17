@@ -3,6 +3,7 @@
 #include "../src/parser.h"
 
 typedef int (*funcp)();
+typedef int (*funcpComParam)(int p);
 
 void deveRetornar(char *pathPrograma, int retornoEsperado)
 {
@@ -13,6 +14,24 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
 	func = (funcp) codes[0];
 
 	retorno = func();
+	if (retorno != retornoEsperado)
+	{
+		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
+	}
+
+	free(codes[0]);
+	free(codes);
+}
+
+void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
+{
+	unsigned char **codes;
+	int retorno;
+	funcp func;
+	codes = PAR_ParseProgram(pathPrograma);
+	func = (funcpComParam) codes[0];
+
+	retorno = func(param);
 	if (retorno != retornoEsperado)
 	{
 		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
@@ -34,5 +53,6 @@ int main()
 	deveRetornar("atribuicao_subtracao_variaveis.sb", 3);
 	deveRetornar("atribuicao_multiplicacao_variaveis.sb", 8);
 	deveRetornar("varias_operacoes_aritmeticas.sb", 1);
+	//deveRetornarComParam("ret_parametro.sb", 5, 5);
   return 0;
 }
