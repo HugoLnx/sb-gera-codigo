@@ -21,3 +21,6 @@ void FABUI_MovDaStackParaEDX(FABUI_tppFuncao pFuncaoParm, char posicaoStack);
 void FABUI_AddEDX_ECX(FABUI_tppFuncao pFuncaoParm);
 void FABUI_SubEDX_ECX(FABUI_tppFuncao pFuncaoParm);
 void FABUI_MulEDX_ECX(FABUI_tppFuncao pFuncaoParm);
+
+void FABUI_CmpECX(FABUI_tppFuncao pFuncaoParm, int numero);
+void FABUI_JmpParaRodapeSeIgual(FABUI_tppFuncao pFuncaoParm);

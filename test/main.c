@@ -53,6 +53,7 @@ int main()
 	deveRetornar("atribuicao_subtracao_variaveis.sb", 3);
 	deveRetornar("atribuicao_multiplicacao_variaveis.sb", 8);
 	deveRetornar("varias_operacoes_aritmeticas.sb", 1);
-	//deveRetornarComParam("ret_parametro.sb", 5, 5);
+	deveRetornarComParam("ret_parametro.sb", 5, 5);
+	deveRetornarComParam("ret_parametro_como_check.sb", 1, 10);
   return 0;
 }

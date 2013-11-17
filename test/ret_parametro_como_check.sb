@@ -1,0 +1,4 @@
+function
+ret? p0 $5
+ret? $0 $1
+end

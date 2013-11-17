@@ -43,26 +43,38 @@ void FBUI_DestruirBuilder(FBUI_tppFuncao pFuncaoParm)
 	free(pFuncao);
 }
 
-void FBUI_RetornarComConstantes(FBUI_tppFuncao pFuncaoParm, int condicao, int retorno)
+void FBUI_Retornar(FBUI_tppFuncao pFuncaoParm, char tipoCheck, int numCheck, char tipoRetorno, int numRetorno)
 {
-	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
-  
-	if (condicao == 0)
+	if (tipoCheck == CONSTANTE)
 	{
-		FABUI_MovToEAX(pFuncao->pAssembly, retorno);
-		FABUI_JmpParaRodape(pFuncao->pAssembly);
+		FABUI_MovToECX(pFuncaoParm->pAssembly, numCheck);
+	} else {
+		char posicao;
+		if (tipoCheck == VARIAVEL)
+		{
+			posicao = PosicaoNaStackDaVariavel(numCheck);
+		} else if (tipoCheck == PARAMETRO) {
+			posicao = PosicaoNaStackDoParametro(numCheck);
+		}
+		FABUI_MovDaStackParaECX(pFuncaoParm->pAssembly, posicao);
 	}
-}
 
-void FBUI_RetornarComConstanteEVariavel(FBUI_tppFuncao pFuncaoParm, int condicao, int numDaVariavelRetornada)
-{
-
-	if (condicao == 0)
+	if (tipoRetorno == CONSTANTE)
 	{
-		char stackPosition = (numDaVariavelRetornada + 1) * -4;
-		FABUI_MovDaStackParaEAX(pFuncaoParm->pAssembly, stackPosition);
-		FABUI_JmpParaRodape(pFuncaoParm->pAssembly);
+		FABUI_MovToEAX(pFuncaoParm->pAssembly, numRetorno);
+	} else {
+		char posicao;
+		if (tipoRetorno == VARIAVEL)
+		{
+			posicao = PosicaoNaStackDaVariavel(numRetorno);
+		} else if (tipoRetorno == PARAMETRO) {
+			posicao = PosicaoNaStackDoParametro(numRetorno);
+		}
+		FABUI_MovDaStackParaEAX(pFuncaoParm->pAssembly, posicao);
 	}
+
+	FABUI_CmpECX(pFuncaoParm->pAssembly, 0);
+	FABUI_JmpParaRodapeSeIgual(pFuncaoParm->pAssembly);
 }
 
 void FBUI_AtribuirSoma(FBUI_tppFuncao pFuncaoParm, char tipoReceptor, int nVariavel, char tipoA, int a, char op, char tipoB, int b)
@@ -129,5 +141,5 @@ char PosicaoNaStackDaVariavel(int numeroDaVariavel)
 
 char PosicaoNaStackDoParametro(int numeroDoParametro)
 {
-	return (numeroDoParametro + 1) * -4;
+	return 8 + numeroDoParametro * 4;
 }
