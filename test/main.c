@@ -56,5 +56,6 @@ int main()
 	deveRetornarComParam("ret_parametro.sb", 5, 5);
 	deveRetornarComParam("ret_parametro_como_check.sb", 1, 10);
 	deveRetornarComParam("x_mais_um.sb", 2, 1);
+	deveRetornarComParam("fatorial.sb", 6, 3);
   return 0;
 }
