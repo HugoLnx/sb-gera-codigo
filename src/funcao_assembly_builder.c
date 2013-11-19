@@ -12,15 +12,6 @@
 
 #define TAMANHO_INSTRUCOES 147
 
-#define CORRECAO_CALCULO_JUMP_RELATIVO 2
-// Para explicar esta correção vamos tomar o seguinte exemplo de instruções:
-// movl %eax, 0x01        : 0xb8 0x01 0x00 0x00 0x00
-// jmp (pular mov abaixo) : 0xbe 0x?? 0x?? 0x?? 0x??
-// movl %eax, 0xff        : 0xb8 0xff 0x00 0x00 0x00
-//
-// Para pular até depois do movl é preciso usar jmp 8
-// pois a contagem de quantos bytes pular começa no 2o
-// byte após o jmp.
 
 #define MOVL_TO_EAX 0xb8
 #define MOVL_TO_ECX 0xb9
@@ -28,9 +19,12 @@
 
 #define MOVL_ENTRE_LOCAIS 0x89
 #define MOVL_ECX_PARA_pEBP 0x4d
-#define JMP_REL 0xeb
-#define JE_RELATIVO 0x74
+#define JMP_LONG 0xe9
+#define JE_REL_P1 0x0f
+#define JE_REL_P2 0x84
 
+#define QUANTIDADE_BYTES_PARA_JMP 5
+#define QUANTIDADE_BYTES_PARA_JE 6
 #define MOVL_ENTRE_LOCAIS_2 0x8b
 #define MOVL_pEBP_PARA_EAX 0x45
 #define MOVL_pEBP_PARA_ECX 0x4d
@@ -95,14 +89,16 @@ static void AddByteNoCorpo(FABUI_tppFuncao pFuncaoParm, unsigned char byte);
 static void AddIntNoCorpo(FABUI_tppFuncao pFuncaoParm, int inteiro);
 
 static void AddByteNoCabecalho(FABUI_tppFuncao pFuncaoParm, unsigned char byte);
+static void AddIntNoCabecalho(FABUI_tppFuncao pFuncaoParm, int inteiro);
 
 static void AddByteNoRodape(FABUI_tppFuncao pFuncaoParm, unsigned char byte);
+static void AddIntNoRodape(FABUI_tppFuncao pFuncaoParm, int inteiro);
 
 static void AddCabecalhoJumpParaOInicioDoCorpo(FABUI_tppFuncao pFuncaoParm);
 static void AddCorpoJumpParaORodape(FABUI_tppFuncao pFuncaoParm);
 static void AddRodapeJumpParaOPosCodigo(FABUI_tppFuncao pFuncaoParm);
 
-static unsigned char BytesEntreCorpoERodape(FABUI_tppFuncao pFuncaoParm);
+static int BytesEntreCorpoERodape(FABUI_tppFuncao pFuncaoParm);
 
 
 /* funcoes exportadas */
@@ -209,11 +205,12 @@ void FABUI_CmpECX(FABUI_tppFuncao pFuncaoParm, int inteiro)
 
 void FABUI_JmpParaRodapeSeIgual(FABUI_tppFuncao pFuncaoParm)
 {
-	unsigned char bytesToJump;
-	bytesToJump = BytesEntreCorpoERodape(pFuncaoParm) - CORRECAO_CALCULO_JUMP_RELATIVO;
+	int bytesToJump;
+	bytesToJump = BytesEntreCorpoERodape(pFuncaoParm) - QUANTIDADE_BYTES_PARA_JE;
 
-	AddByteNoCorpo(pFuncaoParm, JE_RELATIVO);
-	AddByteNoCorpo(pFuncaoParm, bytesToJump);
+	AddByteNoCorpo(pFuncaoParm, JE_REL_P1);
+	AddByteNoCorpo(pFuncaoParm, JE_REL_P2);
+	AddIntNoCorpo(pFuncaoParm, bytesToJump);
 }
 
 
@@ -282,6 +279,16 @@ void AddByteNoCabecalho(FABUI_tppFuncao pFuncaoParm, unsigned char byte)
 	pFuncao->tamanhoCabecalho++;
 }
 
+void AddIntNoCabecalho(FABUI_tppFuncao pFuncaoParm, int inteiro)
+{
+       int i;
+
+       for (i = 0; i < sizeof(int); i++)
+       {
+               AddByteNoCabecalho(pFuncaoParm, *((unsigned char*) &inteiro + i));
+       }
+}
+
 void AddByteNoRodape(FABUI_tppFuncao pFuncaoParm, unsigned char byte)
 {
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
@@ -293,45 +300,56 @@ void AddByteNoRodape(FABUI_tppFuncao pFuncaoParm, unsigned char byte)
 	pFuncao->tamanhoRodape++;
 }
 
+void AddIntNoRodape(FABUI_tppFuncao pFuncaoParm, int inteiro)
+{
+       int i;
+
+       for (i = 0; i < sizeof(int); i++)
+       {
+               AddByteNoRodape(pFuncaoParm, *((unsigned char*) &inteiro + i));
+       }
+}
+
+
 void AddCabecalhoJumpParaOInicioDoCorpo(FABUI_tppFuncao pFuncaoParm)
 {
 	int fimCabecalho;
-	unsigned char bytesToJump;
+	int bytesToJump;
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
 
 	fimCabecalho = INICIO_CABECALHO + pFuncao->tamanhoCabecalho;
-	bytesToJump = (INICIO_CORPO - fimCabecalho) - CORRECAO_CALCULO_JUMP_RELATIVO;
+	bytesToJump = (INICIO_CORPO - fimCabecalho) - QUANTIDADE_BYTES_PARA_JMP;
 
-	AddByteNoCabecalho(pFuncaoParm, JMP_REL);
-	AddByteNoCabecalho(pFuncaoParm, bytesToJump);
+	AddByteNoCabecalho(pFuncaoParm, JMP_LONG);
+	AddIntNoCabecalho(pFuncaoParm, bytesToJump);
 }
 
 void AddCorpoJumpParaORodape(FABUI_tppFuncao pFuncaoParm)
 {
-	unsigned char bytesToJump;
-	bytesToJump = BytesEntreCorpoERodape(pFuncaoParm) - CORRECAO_CALCULO_JUMP_RELATIVO;
+	int bytesToJump;
+	bytesToJump = BytesEntreCorpoERodape(pFuncaoParm) - QUANTIDADE_BYTES_PARA_JMP;
 
-	AddByteNoCorpo(pFuncaoParm, JMP_REL);
-	AddByteNoCorpo(pFuncaoParm, bytesToJump);
+	AddByteNoCorpo(pFuncaoParm, JMP_LONG);
+	AddIntNoCorpo(pFuncaoParm, bytesToJump);
 }
 
 void AddRodapeJumpParaOPosCodigo(FABUI_tppFuncao pFuncaoParm)
 {
 	int fimRodape;
-	unsigned char bytesToJump;
+  int bytesToJump;
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
 
 	fimRodape = INICIO_RODAPE + pFuncao->tamanhoRodape;
-	bytesToJump = (INICIO_POS_CODIGO - fimRodape) - CORRECAO_CALCULO_JUMP_RELATIVO;
+	bytesToJump = (INICIO_POS_CODIGO - fimRodape) - QUANTIDADE_BYTES_PARA_JMP;
 
-	AddByteNoRodape(pFuncaoParm, JMP_REL);
-	AddByteNoRodape(pFuncaoParm, bytesToJump);
+	AddByteNoRodape(pFuncaoParm, JMP_LONG);
+	AddIntNoRodape(pFuncaoParm, bytesToJump);
 }
 
-unsigned char BytesEntreCorpoERodape(FABUI_tppFuncao pFuncaoParm)
+int BytesEntreCorpoERodape(FABUI_tppFuncao pFuncaoParm)
 {
 	int fimCorpo;
-	unsigned char bytes;
+	int bytes;
 	tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
 
 	fimCorpo = INICIO_CORPO + pFuncao->tamanhoCorpo;
