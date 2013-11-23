@@ -25,11 +25,11 @@ char PosicaoNaStackDaVariavel(int numeroDaVariavel);
 
 /***** funções exportadas *****/
 
-FBUI_tppFuncao FBUI_CriarBuilder(void **ppInstrucoes)
+FBUI_tppFuncao FBUI_CriarBuilder(void *pInstrucoes)
 {
    tpFuncao *pFuncao = (tpFuncao*) malloc(sizeof(tpFuncao));
 
-	 pFuncao->pAssembly = FABUI_CriarBuilder(ppInstrucoes);
+	 pFuncao->pAssembly = FABUI_CriarBuilder(pInstrucoes);
 
 	 FABUI_SubDoESP(pFuncao->pAssembly, 40);
 

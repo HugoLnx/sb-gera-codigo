@@ -1,17 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../src/parser.h"
+#include "../src/tamanho_funcao.h"
 
-typedef int (*funcp)();
-typedef int (*funcpComParam)(int p);
+typedef int (*tpFunc)();
+typedef int (*tpFuncComParam)(int p);
 
 void deveRetornar(char *pathPrograma, int retornoEsperado)
 {
-	unsigned char **codes;
+	unsigned char *code;
 	int retorno;
-	funcp func;
-	codes = PAR_ParseProgram(pathPrograma);
-	func = (funcp) codes[0];
+	int tamanho;
+	tpFunc func;
+  FILE *myfp;
+
+  if ((myfp = fopen (pathPrograma, "r")) == NULL) {
+    perror ("nao conseguiu abrir arquivo!");
+    exit(EXIT_FAILURE);
+  }
+
+	code = PAR_ParseProgram(myfp, &tamanho);
+	func = (tpFunc) code;
 
 	retorno = func();
 	if (retorno != retornoEsperado)
@@ -19,17 +28,26 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
 		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
 	}
 
-	free(codes[0]);
-	free(codes);
+	fclose(myfp);
+
+	free(code);
 }
 
 void segundaDeveRetornar(char *pathPrograma, int retornoEsperado)
 {
-	unsigned char **codes;
+	unsigned char *code;
 	int retorno;
-	funcp func;
-	codes = PAR_ParseProgram(pathPrograma);
-	func = (funcp) codes[1];
+	int tamanho;
+	tpFunc func;
+  FILE *myfp;
+
+  if ((myfp = fopen (pathPrograma, "r")) == NULL) {
+    perror ("nao conseguiu abrir arquivo!");
+    exit(EXIT_FAILURE);
+  }
+
+	code = PAR_ParseProgram(myfp, &tamanho);
+	func = (tpFunc) code + TAMANHO_INSTRUCOES;
 
 	retorno = func();
 	if (retorno != retornoEsperado)
@@ -37,17 +55,26 @@ void segundaDeveRetornar(char *pathPrograma, int retornoEsperado)
 		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
 	}
 
-	free(codes[0]);
-	free(codes);
+	fclose(myfp);
+
+	free(code);
 }
 
 void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
 {
-	unsigned char **codes;
+	unsigned char *code;
 	int retorno;
-	funcp func;
-	codes = PAR_ParseProgram(pathPrograma);
-	func = (funcpComParam) codes[0];
+	int tamanho;
+	tpFunc func;
+  FILE *myfp;
+
+  if ((myfp = fopen (pathPrograma, "r")) == NULL) {
+    perror ("nao conseguiu abrir arquivo!");
+    exit(EXIT_FAILURE);
+  }
+
+	code = PAR_ParseProgram(myfp, &tamanho);
+	func = (tpFuncComParam) code;
 
 	retorno = func(param);
 	if (retorno != retornoEsperado)
@@ -55,8 +82,9 @@ void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
 		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
 	}
 
-	free(codes[0]);
-	free(codes);
+	fclose(myfp);
+
+	free(code);
 }
 
 int main()

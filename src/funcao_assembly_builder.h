@@ -1,7 +1,7 @@
 typedef struct FABUI_stFuncao* FABUI_tppFuncao;
 
 unsigned char* FABUI_FinalizarInstrucoes(FABUI_tppFuncao pFuncaoParm);
-FABUI_tppFuncao FABUI_CriarBuilder(void **ppInstrucoes);
+FABUI_tppFuncao FABUI_CriarBuilder(void *pInstrucoes);
 void FABUI_DestruirBuilder(FABUI_tppFuncao pFuncaoParm);
 
 

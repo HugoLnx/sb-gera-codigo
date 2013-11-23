@@ -1,1 +1,1 @@
-unsigned char** PAR_ParseProgram(char *pathPrograma);
+unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho);

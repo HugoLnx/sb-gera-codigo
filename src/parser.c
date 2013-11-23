@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include "funcao_builder.h"
+#include "tamanho_funcao.h"
 
 #define MAX_FUNCOES 10
 
@@ -10,22 +11,15 @@ static void error (const char *msg, int line) {
   exit(EXIT_FAILURE);
 }
 
-
-unsigned char** PAR_ParseProgram(char *pathPrograma)
+unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho)
 {
   int line = 1;
   int  c;
-  FILE *myfp;
 	FBUI_tppFuncao pFuncao;
 	int qntFuncoes = 0;
-	unsigned char **ppFuncoes;
-	
-	ppFuncoes = (unsigned char**) malloc(sizeof(void*) * MAX_FUNCOES);
+	unsigned char *pCode;
 
-  if ((myfp = fopen (pathPrograma, "r")) == NULL) {
-    perror ("nao conseguiu abrir arquivo!");
-    exit(EXIT_FAILURE);
-  }
+	pCode = (unsigned char*) malloc(sizeof(unsigned char) * TAMANHO_INSTRUCOES * MAX_FUNCOES);
 
   while ((c = fgetc(myfp)) != EOF) {
     switch (c) {
@@ -34,7 +28,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
       case 'f': {
         char c0;
         if (fscanf(myfp, "unction%c", &c0) != 1) error("comando invalido", line);
-				pFuncao = FBUI_CriarBuilder((void**) ppFuncoes + qntFuncoes);
+				pFuncao = FBUI_CriarBuilder((void*) pCode + (qntFuncoes * TAMANHO_INSTRUCOES));
 				qntFuncoes++;
         break;
       }
@@ -63,7 +57,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
           char v1;
           if (fscanf(myfp, "all %d %c%d", &f, &v1, &i1) != 3) 
             error("att call comando invalido", line);
-					FBUI_Invocar(pFuncao, v0, i0, (void*) ppFuncoes[f], v1, i1);
+					FBUI_Invocar(pFuncao, v0, i0, (void*) pCode + f * TAMANHO_INSTRUCOES, v1, i1);
         }
 
 
@@ -97,7 +91,6 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
     fscanf(myfp, " ");
   }
 
-	fclose(myfp);
-
-  return ppFuncoes;
+	*pTamanho = qntFuncoes;
+  return pCode;
 }

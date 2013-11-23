@@ -3,14 +3,13 @@
 #include <malloc.h>
 #include <string.h>
 #include "funcao_assembly_builder.h"
+#include "tamanho_funcao.h"
 
 #define INICIO_PRE_CODIGO 0
 #define INICIO_CABECALHO 3
 #define INICIO_CORPO 23
 #define INICIO_RODAPE 223
 #define INICIO_POS_CODIGO 243
-
-#define TAMANHO_INSTRUCOES 247
 
 #define MOVL_TO_EAX 0xb8
 #define MOVL_TO_ECX 0xb9
@@ -120,19 +119,17 @@ static int BytesEntreCorpoERodape(FABUI_tppFuncao pFuncaoParm);
 
 /* funcoes exportadas */
 
-FABUI_tppFuncao FABUI_CriarBuilder(void **ppInstrucoes)
+FABUI_tppFuncao FABUI_CriarBuilder(void *pInstrucoes2)
 {
    tpFuncao *pFuncao = (tpFuncao*) malloc(sizeof(tpFuncao));
 
-	 pFuncao->pInstrucoes = (unsigned char*) malloc(sizeof(unsigned char)*TAMANHO_INSTRUCOES);
+	 pFuncao->pInstrucoes = (unsigned char*) pInstrucoes2;
 
 	 memcpy(pFuncao->pInstrucoes, pInstrucoes, TAMANHO_INSTRUCOES);
 
 	 pFuncao->tamanhoCabecalho = 0;
 	 pFuncao->tamanhoCorpo     = 0;
 	 pFuncao->tamanhoRodape    = 0;
-
-	 *ppInstrucoes = pFuncao->pInstrucoes;
 
    return pFuncao;
 }
