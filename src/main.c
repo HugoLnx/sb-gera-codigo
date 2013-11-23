@@ -25,6 +25,8 @@ int main()
 	deveRetornar("../samples/call_com_parametro.sb"                    , 10, PARAM_NULO, PARAM_NULO);
 	deveRetornar("../samples/fatorial.sb"                              , 6 , 3         , PARAM_NULO);
 	deveRetornar("../samples/dois_params.sb"                           , 6 , 2         , 4         );
+	deveRetornar("../samples/dez_funcoes_cem_linhas.sb"                , 1 , PARAM_NULO, PARAM_NULO);
+	deveRetornar("../samples/duas_funcoes_cem_linhas.sb"               , 1 , PARAM_NULO, PARAM_NULO);
 
   return 0;
 }
