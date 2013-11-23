@@ -120,7 +120,7 @@ static int BytesEntreCorpoERodape(FABUI_tppFuncao pFuncaoParm);
 
 /* funcoes exportadas */
 
-FABUI_tppFuncao FABUI_CriarBuilder()
+FABUI_tppFuncao FABUI_CriarBuilder(void **ppInstrucoes)
 {
    tpFuncao *pFuncao = (tpFuncao*) malloc(sizeof(tpFuncao));
 
@@ -131,6 +131,8 @@ FABUI_tppFuncao FABUI_CriarBuilder()
 	 pFuncao->tamanhoCabecalho = 0;
 	 pFuncao->tamanhoCorpo     = 0;
 	 pFuncao->tamanhoRodape    = 0;
+
+	 *ppInstrucoes = pFuncao->pInstrucoes;
 
    return pFuncao;
 }
@@ -276,7 +278,7 @@ void FABUI_MovEAXToStack(FABUI_tppFuncao pFuncaoParm, char posicaoStack)
 	AddByteNoCorpo(pFuncaoParm, posicaoStack);
 }
 
-unsigned char* FABUI_Instrucoes(FABUI_tppFuncao pFuncaoParm)
+unsigned char* FABUI_FinalizarInstrucoes(FABUI_tppFuncao pFuncaoParm)
 {
    tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
 

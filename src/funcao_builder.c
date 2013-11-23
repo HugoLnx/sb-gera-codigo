@@ -25,11 +25,11 @@ char PosicaoNaStackDaVariavel(int numeroDaVariavel);
 
 /***** funções exportadas *****/
 
-FBUI_tppFuncao FBUI_CriarBuilder()
+FBUI_tppFuncao FBUI_CriarBuilder(void **ppInstrucoes)
 {
    tpFuncao *pFuncao = (tpFuncao*) malloc(sizeof(tpFuncao));
 
-	 pFuncao->pAssembly = FABUI_CriarBuilder();
+	 pFuncao->pAssembly = FABUI_CriarBuilder(ppInstrucoes);
 
 	 FABUI_SubDoESP(pFuncao->pAssembly, 40);
 
@@ -157,10 +157,10 @@ void FBUI_AtribuirSoma(FBUI_tppFuncao pFuncaoParm, char tipoReceptor, int nVaria
 	FABUI_MovECXToStack(pFuncaoParm->pAssembly, posicaoReceptor);
 }
 
-unsigned char* FBUI_Instrucoes(FBUI_tppFuncao pFuncaoParm)
+unsigned char* FBUI_FinalizarInstrucoes(FBUI_tppFuncao pFuncaoParm)
 {
    tpFuncao *pFuncao = (tpFuncao*) pFuncaoParm;
-   return FABUI_Instrucoes(pFuncao->pAssembly);
+   return FABUI_FinalizarInstrucoes(pFuncao->pAssembly);
 }
 
 

@@ -34,7 +34,8 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
       case 'f': {
         char c0;
         if (fscanf(myfp, "unction%c", &c0) != 1) error("comando invalido", line);
-				pFuncao = FBUI_CriarBuilder();
+				pFuncao = FBUI_CriarBuilder((void**) ppFuncoes + qntFuncoes);
+				qntFuncoes++;
         break;
       }
 
@@ -42,8 +43,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
       case 'e': {
         char c0;
         if (fscanf(myfp, "nd%c", &c0) != 1) error("comando invalido", line);
-				*(ppFuncoes+qntFuncoes) = FBUI_Instrucoes(pFuncao);
-				qntFuncoes++;
+				FBUI_FinalizarInstrucoes(pFuncao);
         break;
       }
 

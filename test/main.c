@@ -76,6 +76,6 @@ int main()
 	deveRetornarComParam("x_mais_um.sb", 2, 1);
 	segundaDeveRetornar("call_teste.sb", 5);
 	segundaDeveRetornar("call_com_parametro.sb", 10);
-	//deveRetornarComParam("fatorial.sb", 6, 3);
+	deveRetornarComParam("fatorial.sb", 6, 3);
   return 0;
 }
