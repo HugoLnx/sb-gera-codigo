@@ -11,7 +11,7 @@ static void error (const char *msg, int line) {
   exit(EXIT_FAILURE);
 }
 
-unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho)
+unsigned char* PAR_ParseProgram(FILE *myfp, unsigned char **ultimaFuncao)
 {
   int line = 1;
   int  c;
@@ -29,7 +29,6 @@ unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho)
         char c0;
         if (fscanf(myfp, "unction%c", &c0) != 1) error("comando invalido", line);
 				pFuncao = FBUI_CriarBuilder((void*) pCode + (qntFuncoes * TAMANHO_INSTRUCOES));
-				qntFuncoes++;
         break;
       }
 
@@ -38,6 +37,8 @@ unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho)
         char c0;
         if (fscanf(myfp, "nd%c", &c0) != 1) error("comando invalido", line);
 				FBUI_FinalizarInstrucoes(pFuncao);
+				*ultimaFuncao = pCode + qntFuncoes * TAMANHO_INSTRUCOES;
+				qntFuncoes++;
         break;
       }
 
@@ -69,7 +70,6 @@ unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho)
             error("att arit comando invalido", line);
 
 					FBUI_AtribuirSoma(pFuncao, c, i0, v1, i1, op, v2, i2);
-          //printf("%c%d = %c%d %c %c%d\n", v0, i0, v1, i1, op, v2, i2);
         }
         break;
       }
@@ -91,6 +91,5 @@ unsigned char* PAR_ParseProgram(FILE *myfp, int *pTamanho)
     fscanf(myfp, " ");
   }
 
-	*pTamanho = qntFuncoes;
   return pCode;
 }

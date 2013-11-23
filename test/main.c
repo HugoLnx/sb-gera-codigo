@@ -1,17 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/parser.h"
-#include "../src/tamanho_funcao.h"
+#include "../src/gera.h"
 
-typedef int (*tpFunc)();
 typedef int (*tpFuncComParam)(int p);
 
 void deveRetornar(char *pathPrograma, int retornoEsperado)
 {
 	unsigned char *code;
 	int retorno;
-	int tamanho;
-	tpFunc func;
+	funcp func;
   FILE *myfp;
 
   if ((myfp = fopen (pathPrograma, "r")) == NULL) {
@@ -19,8 +16,7 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
     exit(EXIT_FAILURE);
   }
 
-	code = PAR_ParseProgram(myfp, &tamanho);
-	func = (tpFunc) code;
+	gera(myfp, (void**) &code, &func);
 
 	retorno = func();
 	if (retorno != retornoEsperado)
@@ -30,42 +26,14 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
 
 	fclose(myfp);
 
-	free(code);
-}
-
-void segundaDeveRetornar(char *pathPrograma, int retornoEsperado)
-{
-	unsigned char *code;
-	int retorno;
-	int tamanho;
-	tpFunc func;
-  FILE *myfp;
-
-  if ((myfp = fopen (pathPrograma, "r")) == NULL) {
-    perror ("nao conseguiu abrir arquivo!");
-    exit(EXIT_FAILURE);
-  }
-
-	code = PAR_ParseProgram(myfp, &tamanho);
-	func = (tpFunc) code + TAMANHO_INSTRUCOES;
-
-	retorno = func();
-	if (retorno != retornoEsperado)
-	{
-		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
-	}
-
-	fclose(myfp);
-
-	free(code);
+	libera(code);
 }
 
 void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
 {
 	unsigned char *code;
 	int retorno;
-	int tamanho;
-	tpFunc func;
+	funcp func;
   FILE *myfp;
 
   if ((myfp = fopen (pathPrograma, "r")) == NULL) {
@@ -73,8 +41,7 @@ void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
     exit(EXIT_FAILURE);
   }
 
-	code = PAR_ParseProgram(myfp, &tamanho);
-	func = (tpFuncComParam) code;
+	gera(myfp, (void**) &code, &func);
 
 	retorno = func(param);
 	if (retorno != retornoEsperado)
@@ -84,7 +51,7 @@ void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
 
 	fclose(myfp);
 
-	free(code);
+	libera(code);
 }
 
 int main()
@@ -102,8 +69,8 @@ int main()
 	deveRetornarComParam("ret_parametro.sb", 5, 5);
 	deveRetornarComParam("ret_parametro_como_check.sb", 1, 10);
 	deveRetornarComParam("x_mais_um.sb", 2, 1);
-	segundaDeveRetornar("call_teste.sb", 5);
-	segundaDeveRetornar("call_com_parametro.sb", 10);
+	deveRetornar("call_teste.sb", 5);
+	deveRetornar("call_com_parametro.sb", 10);
 	deveRetornarComParam("fatorial.sb", 6, 3);
   return 0;
 }
