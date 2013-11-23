@@ -23,6 +23,24 @@ void deveRetornar(char *pathPrograma, int retornoEsperado)
 	free(codes);
 }
 
+void segundaDeveRetornar(char *pathPrograma, int retornoEsperado)
+{
+	unsigned char **codes;
+	int retorno;
+	funcp func;
+	codes = PAR_ParseProgram(pathPrograma);
+	func = (funcp) codes[1];
+
+	retorno = func();
+	if (retorno != retornoEsperado)
+	{
+		printf("%s retorno: %d; esperado:%d \n", pathPrograma, retorno, retornoEsperado);
+	}
+
+	free(codes[0]);
+	free(codes);
+}
+
 void deveRetornarComParam(char *pathPrograma, int retornoEsperado, int param)
 {
 	unsigned char **codes;
@@ -56,6 +74,8 @@ int main()
 	deveRetornarComParam("ret_parametro.sb", 5, 5);
 	deveRetornarComParam("ret_parametro_como_check.sb", 1, 10);
 	deveRetornarComParam("x_mais_um.sb", 2, 1);
-	deveRetornarComParam("fatorial.sb", 6, 3);
+	segundaDeveRetornar("call_teste.sb", 5);
+	segundaDeveRetornar("call_com_parametro.sb", 10);
+	//deveRetornarComParam("fatorial.sb", 6, 3);
   return 0;
 }

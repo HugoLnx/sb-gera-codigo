@@ -63,7 +63,7 @@ unsigned char** PAR_ParseProgram(char *pathPrograma)
           char v1;
           if (fscanf(myfp, "all %d %c%d", &f, &v1, &i1) != 3) 
             error("att call comando invalido", line);
-          printf("%c%d = call %d %c%d\n", v0, i0, f, v1, i1);
+					FBUI_Invocar(pFuncao, v0, i0, (void*) ppFuncoes[f], v1, i1);
         }
 
 

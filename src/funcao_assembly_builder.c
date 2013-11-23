@@ -12,7 +12,6 @@
 
 #define TAMANHO_INSTRUCOES 247
 
-
 #define MOVL_TO_EAX 0xb8
 #define MOVL_TO_ECX 0xb9
 #define MOVL_TO_EDX 0xba
@@ -44,6 +43,13 @@
 
 #define CMP_ECX_P1 0x81
 #define CMP_ECX_P2 0xf9
+
+#define PUSH_ECX 0x51
+#define CALL_BYTE 0xe8
+#define QUANTIDADE_BYTES_PARA_CALL 5
+#define ADD_ESP_P1 0x83
+#define ADD_ESP_P2 0xc4
+#define MOVL_EAX_PARA_pEBP 0x45
 
 typedef struct FABUI_stFuncao
 {
@@ -242,6 +248,32 @@ void FABUI_MulEDX_ECX(FABUI_tppFuncao pFuncaoParm)
 	AddByteNoCorpo(pFuncaoParm, MUL_ENTRE_REGISTRADORES_Byte1);
 	AddByteNoCorpo(pFuncaoParm, MUL_ENTRE_REGISTRADORES_Byte2);
 	AddByteNoCorpo(pFuncaoParm, MUL_EDX_ECX);
+}
+
+void FABUI_PushECX(FABUI_tppFuncao pFuncaoParm)
+{
+	AddByteNoCorpo(pFuncaoParm, PUSH_ECX);
+}
+
+void FABUI_Call(FABUI_tppFuncao pFuncaoParm, void *endereco)
+{
+	void *proximaInst = (void*) (pFuncaoParm->pInstrucoes + INICIO_CORPO + pFuncaoParm->tamanhoCorpo + QUANTIDADE_BYTES_PARA_CALL);
+  AddByteNoCorpo(pFuncaoParm, CALL_BYTE);
+	AddIntNoCorpo(pFuncaoParm, endereco - proximaInst);
+}
+
+void FABUI_AddESP(FABUI_tppFuncao pFuncaoParm, char quantidade)
+{
+	AddByteNoCorpo(pFuncaoParm, ADD_ESP_P1);
+	AddByteNoCorpo(pFuncaoParm, ADD_ESP_P2);
+	AddByteNoCorpo(pFuncaoParm, quantidade);
+}
+
+void FABUI_MovEAXToStack(FABUI_tppFuncao pFuncaoParm, char posicaoStack)
+{
+	AddByteNoCorpo(pFuncaoParm, MOVL_ENTRE_LOCAIS);
+	AddByteNoCorpo(pFuncaoParm, MOVL_EAX_PARA_pEBP);
+	AddByteNoCorpo(pFuncaoParm, posicaoStack);
 }
 
 unsigned char* FABUI_Instrucoes(FABUI_tppFuncao pFuncaoParm)

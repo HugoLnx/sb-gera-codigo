@@ -77,6 +77,38 @@ void FBUI_Retornar(FBUI_tppFuncao pFuncaoParm, char tipoCheck, int numCheck, cha
 	FABUI_JmpParaRodapeSeIgual(pFuncaoParm->pAssembly);
 }
 
+void FBUI_Invocar(FBUI_tppFuncao pFuncaoParm, char tipoReceptor, int numReceptor, void *endereco, char tipoParametro, int numParametro)
+{
+	if (tipoParametro == CONSTANTE)
+	{
+		FABUI_MovToECX(pFuncaoParm->pAssembly, numParametro);
+	} else {
+		char posicao;
+		if (tipoParametro == VARIAVEL)
+		{
+			posicao = PosicaoNaStackDaVariavel(numParametro);
+		} else if (tipoParametro == PARAMETRO) {
+			posicao = PosicaoNaStackDoParametro(numParametro);
+		}
+		FABUI_MovDaStackParaECX(pFuncaoParm->pAssembly, posicao);
+	}
+
+	FABUI_PushECX(pFuncaoParm->pAssembly);
+
+	FABUI_Call(pFuncaoParm->pAssembly, endereco);
+
+	FABUI_AddESP(pFuncaoParm->pAssembly, sizeof(int));
+
+	char posicaoReceptor;
+	if (tipoReceptor == VARIAVEL)
+	{
+		posicaoReceptor = PosicaoNaStackDaVariavel(numReceptor);
+	} else {
+		posicaoReceptor = PosicaoNaStackDoParametro(numReceptor);
+	}
+	FABUI_MovEAXToStack(pFuncaoParm->pAssembly, posicaoReceptor);
+}
+
 void FBUI_AtribuirSoma(FBUI_tppFuncao pFuncaoParm, char tipoReceptor, int nVariavel, char tipoA, int a, char op, char tipoB, int b)
 {
 	char posicaoReceptor;
