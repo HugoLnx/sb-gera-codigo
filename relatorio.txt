@@ -5,6 +5,11 @@ Conteúdo do zip:
 No zip encontram-se as pastas src e samples. Dentro de src encontram-se os arquivos fonte, criamos módulos auxiliares ao invés de só usar um arquivo gera.c. Na pasta samples encontram-se todos os .sb que usamos em nossos testes.
 Todos os arquivos dentro de src compõe o gerador de código, exceto o main.c, que executa os nossos testes.
 
+Temos 3 módulos dentro deste projeto:
+  funcao_assembly_builder(FABUI): Responsável por gerar o código assembly para uma função.
+	funcao_builder(FBUI): Responsável por fazer o parseamento de uma instrução de função para assembly.
+	parser(PAR): Responsável por ler o .sb e delegar o parseamento da instrução correta para o funcao_builder.
+
 Sobre o que foi implementado:
 Tudo que foi proposto no trabalho está funcionando:
 
