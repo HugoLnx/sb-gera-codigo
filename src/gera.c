@@ -1,3 +1,6 @@
+/* Hugo Roque de Figueiredo 1311162 */
+/* Robert Correa dos Santos 1210325 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"

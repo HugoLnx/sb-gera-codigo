@@ -1,0 +1,381 @@
+Tudo que foi proposto no trabalho está funcionando:
+
+Fizemos alguns testes para verificar se o retorno estava funcionando.
+	Com constantes:
+		| function
+		| ret? $0 $50
+		| end
+
+	Com variáveis:
+		| function
+		| v0 = $29 + $1
+		| ret? $0 v0
+		| end
+
+	Com parâmetros:
+		| function
+		| ret? $0 p0
+		| end
+
+	Também fizemos alguns testes para verificar o caso que o retorno não é executado:
+		| function
+		| ret? p0 $5
+		| ret? $0 $1
+		| end
+
+		| function
+		| ret? $1 $50
+		| ret? $0 $99
+		| end
+
+Fizemos alguns testes para verificar se as operações aritméticas estavam funcionando.
+	Com variáveis e constantes:
+		| function
+		| v0 = $1 + $0
+		| v1 = $1 + $1
+		| v2 = v0 + v1
+		| ret? $0 v2
+		| end
+
+	Ou com parâmetros:
+		| function
+		| p0 = p0 + $1
+		| ret? $0 p0
+		| end
+
+
+Fizemos alguns testes para verificar se o call funcionava:
+  | function
+  | ret? $0 p0
+  | end
+  | function
+  | v0 = call 0 $10
+  | ret? $0 v0
+  | end
+
+  | function
+  | ret? $0 $5
+  | end
+  | function
+  | v0 = call 0 $0
+  | ret? $0 v0
+  | end
+
+Nos preocupamos de testar se o call chamava a própria função:
+  | function
+  | ret? p0 $1
+  | v0 = p0 - $1
+  | v1 = call 0 v0
+  | v0 = p0 * v1
+  | ret? $0 v0
+  | end
+
+E nos preocupamos de testar o limite de 10 funções, com call umas para as outras e o limite de 100 linhas de código:
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 0 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 1 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 2 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 3 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 4 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 5 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 6 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = call 7 $1
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = call 8 $1
+  | ret? $0 v0
+  | end
+
+
+
+Também nos preocupamos com o fato do programa ter 100 linhas, porém menos funções. Agora nós suportamos funções de aproximadamente
+50 linhas:
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | ret? $0 v0
+  | end
+  | function
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = call 0 $1
+  | ret? $0 v0
+  | end
+
+
+Nós não suportamos funções muito maiores que isso, por que cada função tem um espaço pré-determinado de 847 bytes. Inicialmente usávamos 247 bytes, porém aumentamos para poder suportar funções maiores, bastou mudar as constantes, questão de segundos para fazer. Só não aumentamos mais ainda por que achamos um pouco exagerado ter mais de 1kb para uma função. Um exemplo de função que não funcionaria é:
+  | function
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * p0
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = $1 * $1
+  | v0 = call 0 $1
+  | ret? $0 v0
+  | end
